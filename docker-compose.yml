@@ -1,0 +1,23 @@
+version: '3.3'
+
+networks:
+  go:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.33.33.0/28
+
+services:
+  go:
+    restart: unless-stopped
+    build:
+      context: ./src
+      dockerfile: Dockerfile
+    volumes:
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/group:/etc/group:ro
+      - ./cron/crontab.example:/etc/periodic/crontab:rw
+      - ./test:/usr/data/app
+    networks:
+      - go
